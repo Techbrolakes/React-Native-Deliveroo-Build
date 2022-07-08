@@ -1,3 +1,4 @@
+import { color } from "../config/Colors";
 import {
   View,
   Text,
@@ -5,9 +6,17 @@ import {
   StatusBar,
   Platform,
   StyleSheet,
+  Image,
+  TextInput,
 } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import {
+  AdjustmentsIcon,
+  ChevronDownIcon,
+  SearchIcon,
+  UserIcon,
+} from "react-native-heroicons/outline";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -19,10 +28,38 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Text className="text-6xl text-red-400">HomeScreen</Text>
+    <SafeAreaView style={styles.container} className="space-y-4">
+      <View className="flex-row items-center space-x-2 mx-4 ">
+        <Image
+          source={{
+            uri: "https://links.papareact.com/wru",
+          }}
+          className="h-7 w-7 bg-gray-300 p-4 rounded-full"
+        />
+
+        <View className="flex-1">
+          <Text className="font-bold text-gray-400 text-xs">Deliver Now!</Text>
+          <Text className="font-bold text-xl">
+            Current Location <ChevronDownIcon size={20} color={color.primary} />
+          </Text>
+        </View>
+
+        <UserIcon size={35} color={color.primary} />
       </View>
+
+      {/* SEARCH BOX */}
+      <View className="flex-row items-center px-4 space-x-2 pb-2">
+        <View className="flex-row flex-1 space-x-2 bg-gray-200 p-3">
+          <SearchIcon color={color.primary} size={20} />
+          <TextInput
+            placeholder="Restaurants and cuisines"
+            keyboardType="default"
+          />
+        </View>
+        <AdjustmentsIcon color={color.primary} />
+      </View>
+
+      {/* SCROLL VIEW */}
     </SafeAreaView>
   );
 }
