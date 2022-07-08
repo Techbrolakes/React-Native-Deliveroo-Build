@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  ScrollView,
 } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -17,6 +18,7 @@ import {
   SearchIcon,
   UserIcon,
 } from "react-native-heroicons/outline";
+import Categories from "../components/category/Categories";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -29,7 +31,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container} className="space-y-4">
-      <View className="flex-row items-center space-x-2 mx-4 ">
+      <View className="flex-row items-center space-x-2 px-4 pt-2">
         <Image
           source={{
             uri: "https://links.papareact.com/wru",
@@ -48,7 +50,7 @@ export default function HomeScreen() {
       </View>
 
       {/* SEARCH BOX */}
-      <View className="flex-row items-center px-4 space-x-2 pb-2">
+      <View className="flex-row items-center  space-x-2 pb-2 px-4">
         <View className="flex-row flex-1 space-x-2 bg-gray-200 p-3">
           <SearchIcon color={color.primary} size={20} />
           <TextInput
@@ -60,6 +62,9 @@ export default function HomeScreen() {
       </View>
 
       {/* SCROLL VIEW */}
+      <ScrollView className="bg-gray-100">
+        <Categories />
+      </ScrollView>
     </SafeAreaView>
   );
 }
