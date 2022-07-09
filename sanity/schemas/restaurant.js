@@ -22,12 +22,12 @@ export default {
     },
     {
       name: "lat",
-      type: "number",
+      type: "string",
       title: "Latitude of the restaurant",
     },
     {
       name: "long",
-      type: "number",
+      type: "string",
       title: "Longitude of the restaurant",
     },
     {

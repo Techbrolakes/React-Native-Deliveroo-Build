@@ -68,22 +68,23 @@ export default function HomeScreen() {
         <Categories />
 
         {/* Featured Rowa */}
-        <FeaturedRow
-          title="Featured"
-          description="paid placements from our partners"
-          featuredCategory="featured"
-        />
 
         <FeaturedRow
           title="Featured"
           description="paid placements from our partners"
           featuredCategory="featured"
         />
+        
+        <FeaturedRow
+          title="Offers near you!"
+          description="Why not support your local restaurant tonight"
+          featuredCategory="offer"
+        />
 
         <FeaturedRow
-          title="Featured"
-          description="paid placements from our partners"
-          featuredCategory="featured"
+          title="Tasty Discounts"
+          description="Everyone's been enjoying these juicy discounts"
+          featuredCategory="discounts"
         />
       </ScrollView>
     </SafeAreaView>
