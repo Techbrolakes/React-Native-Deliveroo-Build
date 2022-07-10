@@ -1,7 +1,17 @@
 import { ScrollView, Text, View } from "react-native";
 import CategoryCard from "./CategoryCard";
+import sanityClient, { urlFor } from "../../sanity";
+import { useEffect, useState } from "react";
 
 export default function Categories() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    sanityClient
+      .fetch(`*[_type = "category"]`)
+      .then((data) => setCategories(data));
+  }, []);
+  console.log(categories);
   return (
     <ScrollView
       contentContainerStyle={{
@@ -11,21 +21,13 @@ export default function Categories() {
       horizontal={true}
       showsHorizontalScrollIndicator={false}
     >
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
-      <CategoryCard imgUrl="https://links.papareact.com/gn7" title="Testing" />
+      {categories.map((category) => {
+        <CategoryCard
+          key={category._id}
+          title={category.title}
+          imgUrl={urlFor(category.image).width(200).url()}
+        />;
+      })}
     </ScrollView>
   );
 }

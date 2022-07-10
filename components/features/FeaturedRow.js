@@ -2,8 +2,33 @@ import { View, Text, ScrollView } from "react-native";
 import { color } from "../../config/Colors";
 import { ArrowRightIcon } from "react-native-heroicons/outline";
 import RestaurantCard from "../restaurants/RestaurantCard";
+import { useEffect, useState } from "react";
+import sanityClient from "../../sanity";
 
-export default function FeaturedRow({ title, description, featuredCategory }) {
+export default function FeaturedRow({ title, description, id }) {
+  const [restaurants, setRestaurants] = useState([]);
+  useEffect(() => {
+    sanityClient
+      .fetch(
+        `
+      *[_type == "featured" && _id == $id] {
+        ...,
+        restaurants[]->{
+          ...,
+          dishes[]->,
+          type-> {
+            name
+          }
+        },
+      }[0]
+      `,
+        { id }
+      )
+      .then((data) => {
+        setRestaurants(data?.restaurants);
+      });
+  }, []);
+
   return (
     <View>
       <View className="mt-4 flex-row items-center justify-between px-4">
@@ -21,54 +46,21 @@ export default function FeaturedRow({ title, description, featuredCategory }) {
         showsHorizontalScrollIndicator={false}
         className="pt-4"
       >
-        <RestaurantCard
-          id={123}
-          imgUrl="https://links.papareact.com/gn7"
-          title="KFC"
-          rating={4.5}
-          genre={"Fast Food"}
-          address={"123 Main St"}
-          short_description={"KFC is a fast food restaurant"}
-          dishes={["Chicken, Beef, Pork"]}
-          long={-123.123}
-          lat={123.123}
-        />
-        <RestaurantCard
-          id={123}
-          imgUrl="https://links.papareact.com/gn7"
-          title="KFC"
-          rating={4.5}
-          genre={"Fast Food"}
-          address={"123 Main St"}
-          short_description={"KFC is a fast food restaurant"}
-          dishes={["Chicken, Beef, Pork"]}
-          long={-123.123}
-          lat={123.123}
-        />
-        <RestaurantCard
-          id={123}
-          imgUrl="https://links.papareact.com/gn7"
-          title="KFC"
-          rating={4.5}
-          genre={"Fast Food"}
-          address={"123 Main St"}
-          short_description={"KFC is a fast food restaurant"}
-          dishes={["Chicken, Beef, Pork"]}
-          long={-123.123}
-          lat={123.123}
-        />
-        <RestaurantCard
-          id={123}
-          imgUrl="https://links.papareact.com/gn7"
-          title="KFC"
-          rating={4.5}
-          genre={"Fast Food"}
-          address={"123 Main St"}
-          short_description={"KFC is a fast food restaurant"}
-          dishes={["Chicken, Beef, Pork"]}
-          long={-123.123}
-          lat={123.123}
-        />
+        {restaurants?.map((restaurant) => {
+          <RestaurantCard
+            key={restaurant._id}
+            id={restaurant._id}
+            imgUrl={restaurant.image}
+            title={restaurant.name}
+            rating={restaurant.rating}
+            genre={restaurant.type?.name}
+            address={restaurant.address}
+            short_description={restaurant.short_description}
+            dishes={restaurant.dishes}
+            long={restaurant.long}
+            lat={restaurant.lat}
+          />;
+        })}
       </ScrollView>
     </View>
   );

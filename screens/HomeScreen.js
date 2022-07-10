@@ -10,7 +10,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   AdjustmentsIcon,
@@ -20,15 +20,38 @@ import {
 } from "react-native-heroicons/outline";
 import Categories from "../components/category/Categories";
 import FeaturedRow from "../components/features/FeaturedRow";
+import sanityClient from "../sanity";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+
+  const [featuredCategories, setFeaturedCatgories] = useState([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
+
+  useEffect(() => {
+    sanityClient
+      .fetch(
+        `
+      *[_type == "featured"]{
+        ...,
+        restaurants[]->{
+          ...,
+          dishes[]->
+        }
+      }
+      `
+      )
+      .then((data) => {
+        setFeaturedCatgories(data);
+      });
+  }, []);
+
+  console.log(featuredCategories);
 
   return (
     <SafeAreaView style={styles.container} className="space-y-4">
@@ -69,23 +92,16 @@ export default function HomeScreen() {
 
         {/* Featured Rowa */}
 
-        <FeaturedRow
-          title="Featured"
-          description="paid placements from our partners"
-          featuredCategory="featured"
-        />
-        
-        <FeaturedRow
-          title="Offers near you!"
-          description="Why not support your local restaurant tonight"
-          featuredCategory="offer"
-        />
-
-        <FeaturedRow
-          title="Tasty Discounts"
-          description="Everyone's been enjoying these juicy discounts"
-          featuredCategory="discounts"
-        />
+        {featuredCategories?.map((category) => {
+          return (
+            <FeaturedRow
+              key={category._id}
+              id={category._id}
+              title={category.name}
+              description={category.short_description}
+            />
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
